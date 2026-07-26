@@ -1,0 +1,6 @@
+{
+  "name": "Matrix AI Sandbox",
+  "description": "An online combat sandbox in the Matrix universe.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
