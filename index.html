@@ -279,7 +279,7 @@
         async function initMultiplayer() {
             try {
                 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'matrix-sandbox-default';
+                appId = 'global-matrix-world'; // Single shared global room
                 
                 if (!firebaseConfig) {
                     document.getElementById('network-status').innerText = "Оффлайн режим (Нет конфига БД)";
@@ -883,9 +883,25 @@
                 localRagdoll = null;
             }
             
-            let spawnX = (Math.random() - 0.5) * 500;
-            let spawnZ = (Math.random() - 0.5) * 500;
-            let spawnY = 5 + Math.random() * 20; // Allow landing on roofs
+            let spawnX, spawnZ;
+            let spawnY = 30 + Math.random() * 20; // Allow landing safely on roofs or ground
+            
+            if (otherPlayers.size > 0) {
+                // Dynamically spawn near an active player
+                const playersArray = Array.from(otherPlayers.values());
+                const anchorPlayer = playersArray[Math.floor(Math.random() * playersArray.length)];
+                
+                const minRadius = 20;
+                const maxRadius = 60;
+                const radius = minRadius + Math.random() * (maxRadius - minRadius);
+                const angle = Math.random() * Math.PI * 2;
+                
+                spawnX = anchorPlayer.targetPos.x + Math.cos(angle) * radius;
+                spawnZ = anchorPlayer.targetPos.z + Math.sin(angle) * radius;
+            } else {
+                spawnX = (Math.random() - 0.5) * 500;
+                spawnZ = (Math.random() - 0.5) * 500;
+            }
             
             playerBody.position.set(spawnX, spawnY, spawnZ);
             playerBody.velocity.set(0,0,0);
